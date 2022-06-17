@@ -11,6 +11,44 @@ import copy
 ##############################
 from matplotlib.transforms import Bbox
 
+def plot_settings():
+    figure = {
+        'dpi'       : 500,        ## figure dots per inch
+    }
+    axes = {
+        'titlesize' : 'small',    ## fontsize of the axes title
+        'spines.right': False,
+        'spines.top': False,
+        }
+
+    xticks = {
+        'labelsize' : 'large',         ## fontsize of the tick labels
+        'bottom': True
+    }
+
+    yticks = {
+        'labelsize' : 'large',         ## fontsize of the tick labels
+        'left': True,
+    }
+
+    font = {'family' : 'sans-serif',
+            #'weight' : 'bold',
+            # 'size'   : 7
+            }
+
+    plt.rc('font', **font)        # controls default text sizes
+    plt.rc('axes', **axes)        # fontsize of the axes title
+    plt.rc('xtick', **xticks)      # fontsize of the tick labels
+    plt.rc('ytick', **yticks)      # fontsize of the tick labels
+
+    import matplotlib as mpl
+
+    mpl.rcParams.update({
+        'xtick.bottom': True,
+        'ytick.left': True,
+        'figure.subplot.wspace': .01,
+        'figure.subplot.hspace': .01,
+    })
 
 def despine(ax):
     '''Remove top and right spines'''
@@ -209,8 +247,6 @@ def add_scale_bar(ax, loc: tuple, length: tuple, bartype: str = "L", text: Union
 
 
 def make_fig_layout(layout: dict = None, **kwargs):
-    pass
-
     """
     main idea is that the grid dictionary contains the necessary relationships for the layout.
     layout arg:
@@ -218,6 +254,8 @@ def make_fig_layout(layout: dict = None, **kwargs):
         # bound = l, t, r, b
 
     """
+
+    plot_settings()
 
     figsize = (8, 10) if 'figsize' not in kwargs else kwargs['figsize']
     dpi = 400 if 'dpi' not in kwargs else kwargs['dpi']
@@ -271,6 +309,7 @@ def make_fig_layout(layout: dict = None, **kwargs):
         axes[name] = _axes
         grids[name] = gs_
 
+
     return fig, axes, grids
 
 
@@ -319,5 +358,6 @@ def add_label_axes(s, ax, **kwargs):
         assert len(kwargs['xy']) == 2, 'xy coord length is not equal to 2.'
         xy = kwargs['xy']
     ax.annotate(s=s, xy=xy, xycoords='figure fraction', fontsize=fs, weight='bold')
+
 
 
