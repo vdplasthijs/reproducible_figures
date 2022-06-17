@@ -219,13 +219,9 @@ def make_fig_layout(layout: dict = None, **kwargs):
 
     figsize = (8, 10) if 'figsize' not in kwargs else kwargs['figsize']
     dpi = 400 if 'dpi' not in kwargs else kwargs['dpi']
-    wspace = 0.1 if 'wspace' not in kwargs else kwargs['wspace']
-    hspace = 0.1 if 'hspace' not in kwargs else kwargs['hspace']
-
 
     fig = plt.figure(constrained_layout=False,  # False better when customising grids
                      figsize=figsize, dpi=dpi)  # width x height in inches
-
 
     # layout = {
     #     'topleft': {
@@ -236,12 +232,15 @@ def make_fig_layout(layout: dict = None, **kwargs):
     axes = {}  # this is the dictionary that will collect *all* axes that are required for this plot, named as per input grid
 
     for name, _grid in layout.items():
+        wspace = 0.1 if 'wspace' not in _grid else _grid['wspace']
+        hspace = 0.5 if 'hspace' not in _grid else _grid['hspace']
+
         gs_ = fig.add_gridspec(ncols=_grid['panel_shape'][0], nrows=_grid['panel_shape'][1],
                                left=_grid['bound'][0],
                                top=_grid['bound'][1],
                                right=_grid['bound'][2],
                                bottom=_grid['bound'][3],
-                               wspace=0.1, hspace=0.4
+                               wspace=wspace, hspace=hspace
                                )  # leave a bit of space between grids (eg left here and right in grid above)
 
         n_axs: int = _grid['panel_shape'][0] * _grid['panel_shape'][1]
@@ -264,4 +263,15 @@ def make_fig_layout(layout: dict = None, **kwargs):
 
     return fig, axes
 
+def make_random_scatter(ax):
+    ax.scatter(np.random.randn(100), np.random.randn(100), s=50, c='forestgreen')
+    ax.set_ylabel('an y axis label')
+    ax.set_xlabel('an x axis label')
+    ax.set_title('an axis title')
 
+
+def show_test_figure_layout(fig, axes):
+    for grid, panels in axes.items():
+        for ax in panels:
+            make_random_scatter(ax)
+    fig.show()
