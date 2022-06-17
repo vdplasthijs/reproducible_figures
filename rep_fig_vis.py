@@ -230,7 +230,7 @@ def make_fig_layout(layout: dict = None, **kwargs):
     # }
 
     axes = {}  # this is the dictionary that will collect *all* axes that are required for this plot, named as per input grid
-
+    grids = {}
     for name, _grid in layout.items():
         wspace = 0.1 if 'wspace' not in _grid else _grid['wspace']
         hspace = 0.5 if 'hspace' not in _grid else _grid['hspace']
@@ -244,34 +244,71 @@ def make_fig_layout(layout: dict = None, **kwargs):
                                )  # leave a bit of space between grids (eg left here and right in grid above)
 
         n_axs: int = _grid['panel_shape'][0] * _grid['panel_shape'][1]
-        _axes = {}
+        # _axes = {}
         if _grid['panel_shape'][0] > 1 and _grid['panel_shape'][1] > 1:
+            _axes = np.empty(shape = (range(_grid['panel_shape'][0]), range(_grid['panel_shape'][1])), dtype=object)
             for col in range(_grid['panel_shape'][0]):
                 for row in range(_grid['panel_shape'][1]):
                     _axes[col, row] = fig.add_subplot(gs_[col, row])  # create ax by indexing grid object
 
         elif _grid['panel_shape'][0] > 1 or _grid['panel_shape'][1] > 1:
+            _axes = np.empty(shape = (n_axs), dtype=object)
             for i in range(n_axs):
                 _axes[i] = fig.add_subplot(gs_[i])  # create ax by indexing grid object
 
         elif _grid['panel_shape'][0] == 1 or _grid['panel_shape'][1] == 1:
-            pass
+            raise NotImplementedError('action not implemented yet.')
         else:
-            pass
+            raise NotImplementedError('action not implemented yet.')
 
         axes[name] = _axes
+        grids[name] = gs_
 
-    return fig, axes
+    return fig, axes, grids
 
-def make_random_scatter(ax):
+def make_random_scatter(ax, title):
     ax.scatter(np.random.randn(100), np.random.randn(100), s=50, c='forestgreen')
     ax.set_ylabel('an y axis label')
     ax.set_xlabel('an x axis label')
-    ax.set_title('an axis title')
+    ax.set_title(title)
 
 
 def show_test_figure_layout(fig, axes):
     for grid, panels in axes.items():
-        for ax in panels:
-            make_random_scatter(ax)
+        # print(panels)
+        for i, ax in enumerate(panels):
+            make_random_scatter(ax=ax, title = f"{grid} - ax: {i}")
     fig.show()
+
+
+def add_label_grid(grid, s, fig, ax, **kwargs):
+    """Add text annotation in relation to a specified gridspec object."""
+    fs = 15 if 'fontsize' not in kwargs else kwargs['fontsize']
+    gs_ = grid
+    pos = gs_.get_grid_positions(fig)
+    top = np.max(pos[1])
+    left = np.max(pos[2])
+    xy = (left - 0.04, top + 0.02)
+    ax.annotate(s=s, xy=xy, xycoords='figure fraction', fontsize=fs, weight='bold')
+
+
+def add_label_axes(s, ax, **kwargs):
+    """Add text annotation at xy coordinate (in units of figure fraction) to an axes object."""
+    fs = 15 if 'fontsize' not in kwargs else kwargs['fontsize']
+    y_adjust = 0.02 if 'y_adjust' not in kwargs else kwargs['y_adjust']
+    x_adjust = 0.04 if 'x_adjust' not in kwargs else kwargs['x_adjust']
+    if 'xy' not in kwargs:
+        pos = np.array(ax.get_position())
+        top = pos[1][1]
+        left = pos[0][0]
+        xy = (left - x_adjust, top + y_adjust)
+    else:
+        assert len(kwargs['xy']) == 2, 'xy coord length is not equal to 2.'
+        xy = kwargs['xy']
+    ax.annotate(s=s, xy=xy, xycoords='figure fraction', fontsize=fs, weight='bold')
+
+
+
+
+
+
