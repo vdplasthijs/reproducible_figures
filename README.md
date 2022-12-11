@@ -1,4 +1,4 @@
 # Reproducible figures
-Tutorial/explainer on why &amp; how to make reproducible figures
+Functions to help implement a reproducible figure making process in Python. 
 
-Please see slides in repo!
+Thijs's tutorial/explainer slides available in repo!
