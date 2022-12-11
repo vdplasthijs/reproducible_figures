@@ -5,41 +5,42 @@ import matplotlib.pyplot as plt
 import scipy.stats
 import copy
 
-
 ##############################
 ###   GENERAL PLOTTING FUNCTIONS
 ##############################
+from matplotlib import font_manager
 from matplotlib.transforms import Bbox
+
 
 def plot_settings():
     figure = {
-        'dpi'       : 500,        ## figure dots per inch
+        'dpi': 500,  ## figure dots per inch
     }
     axes = {
-        'titlesize' : 'small',    ## fontsize of the axes title
+        'titlesize': 'small',  ## fontsize of the axes title
         'spines.right': False,
         'spines.top': False,
-        }
+    }
 
     xticks = {
-        'labelsize' : 'large',         ## fontsize of the tick labels
+        'labelsize': 'large',  ## fontsize of the tick labels
         'bottom': True
     }
 
     yticks = {
-        'labelsize' : 'large',         ## fontsize of the tick labels
+        'labelsize': 'large',  ## fontsize of the tick labels
         'left': True,
     }
 
-    font = {'family' : 'sans-serif',
-            #'weight' : 'bold',
-            # 'size'   : 7
-            }
+    # font = {'family': 'sans-serif',
+    #         # 'weight' : 'bold',
+    #         # 'size'   : 7
+    #         }
 
-    plt.rc('font', **font)        # controls default text sizes
-    plt.rc('axes', **axes)        # fontsize of the axes title
-    plt.rc('xtick', **xticks)      # fontsize of the tick labels
-    plt.rc('ytick', **yticks)      # fontsize of the tick labels
+    # plt.rc('font', **font)  # controls default text sizes
+    plt.rc('axes', **axes)  # fontsize of the axes title
+    plt.rc('xtick', **xticks)  # fontsize of the tick labels
+    plt.rc('ytick', **yticks)  # fontsize of the tick labels
 
     import matplotlib as mpl
 
@@ -50,10 +51,15 @@ def plot_settings():
         'figure.subplot.hspace': .01,
     })
 
-def despine(ax):
+
+def despine(ax, keep=[], remove=[]):
     '''Remove top and right spines'''
     ax.spines['top'].set_visible(False)
     ax.spines['right'].set_visible(False)
+    for k in keep:
+        ax.spines[k].set_visible(True)
+    for r in remove:
+        ax.spines[r].set_visible(False)
 
 
 def naked(ax):
@@ -226,24 +232,36 @@ def add_scale_bar(ax, loc: tuple, length: tuple, bartype: str = "L", text: Union
         lw: linewidth of the scalebar
     """
 
+    _xlims_original = ax.get_xlim()
+
     text_offset = [1] * len(text) if not 'text_offset' in kwargs else kwargs['text_offset']
     # text_offset_2 = [1] * len(text) if not 'text_offset_2' in kwargs else kwargs['text_offset_2']
     lw = 0.75 if not 'lw' in kwargs else kwargs['lw']
     fs = 10 if not 'fs' in kwargs else kwargs['fs']
     if bartype == 'L':
-        ax.plot([loc[0]] * 2, [loc[1], loc[1] + length[0]], color='black', clip_on=False, lw=lw,
-                solid_capstyle='butt')
-        ax.plot((loc[0], loc[0] + length[1]), [loc[1]] * 2, color='black', clip_on=False, lw=lw,
-                solid_capstyle='butt')
-        # kwargs['fig'].show()
+        ax.plot([loc[0]] * 2, [loc[1] - (length[0] * 0), loc[1] - (length[0] * 0) + length[0]], color='black',
+                clip_on=False, lw=lw, solid_capstyle='butt')  # y axis sbar
+        ax.plot((loc[0], loc[0] + length[1]), [loc[1]] * 2, color='black', clip_on=False, lw=lw, solid_capstyle='butt')  # x axis sbar
         assert type(text) is not str, 'incorrect type for L scalebar text provided.'
         assert len(text) == 2, 'L scalebar text argument must be of length: 2'
 
-        ax.text(x=loc[0] - 1 * text_offset[0], y=loc[1], s=text[0], fontsize=fs, rotation=90)
-        ax.text(x=loc[0], y=loc[1] - 1 * text_offset[1], s=text[1], fontsize=fs, rotation=0)
+        ax.text(x=loc[0] - text_offset[0], y=loc[1], s=text[0], fontsize=fs, rotation=0, clip_on=False, horizontalalignment='right')  # y sbar text
+        ax.text(x=loc[0], y=loc[1] - text_offset[1], s=text[1], fontsize=fs, rotation=0, clip_on=False, horizontalalignment='left')  # x sbar text
+    elif bartype == '|':
+        ax.plot([loc[0]] * 2, [loc[1] - (length[0] * 0), loc[1] - (length[0] * 0) + length[0]], color='black',
+                clip_on=False, lw=lw, solid_capstyle='butt')  # y axis sbar
+        assert type(text) is str, f'provide str for | scalebar text: {text}'
+        ax.text(x=loc[0] - text_offset[0], y=loc[1] - text_offset[1], s=text, fontsize=fs, rotation=0, clip_on=False)
+    elif bartype == '_':
+        ax.plot((loc[0], loc[0] + length[1]), [loc[1]] * 2, color='black', clip_on=False, lw=lw, solid_capstyle='butt')  # x axis sbar
+        assert type(text) is str, f'provide str for _ scalebar text: {text}'
+        ax.text(x=loc[0] - text_offset[0], y=loc[1] - text_offset[1], s=text, fontsize=fs, rotation=0, clip_on=False, horizontalalignment='right')
 
     else:
         raise ValueError(f'{type} not implemented currently.')
+
+    # reset original xlims
+    ax.set_xlim(_xlims_original)
 
 
 def make_fig_layout(layout: dict = None, **kwargs):
@@ -286,10 +304,10 @@ def make_fig_layout(layout: dict = None, **kwargs):
         n_axs: int = _grid['panel_shape'][0] * _grid['panel_shape'][1]
         # _axes = {}
         if _grid['panel_shape'][0] > 1 and _grid['panel_shape'][1] > 1:
-            _axes = np.empty(shape=(range(_grid['panel_shape'][0]), range(_grid['panel_shape'][1])), dtype=object)
+            _axes = np.empty(shape=(_grid['panel_shape'][0], _grid['panel_shape'][1]), dtype=object)
             for col in range(_grid['panel_shape'][0]):
                 for row in range(_grid['panel_shape'][1]):
-                    _axes[col, row] = fig.add_subplot(gs_[col, row])  # create ax by indexing grid object
+                    _axes[col, row] = fig.add_subplot(gs_[row, col])  # create ax by indexing grid object
 
         elif _grid['panel_shape'][0] > 1 or _grid['panel_shape'][1] > 1:
             _axes = np.empty(shape=(n_axs), dtype=object)
@@ -303,12 +321,21 @@ def make_fig_layout(layout: dict = None, **kwargs):
             ax = fig.add_subplot()
             ax.set_position(pos=bbox)
             _axes[0] = ax
+            if len(_grid['panel_shape']) == 3:
+                if _grid['panel_shape'][2] == 'twinx':
+                    ax2 = ax.twinx()
+                elif _grid['panel_shape'][2] == 'twiny':
+                    ax2 = ax.twiny()
+                else:
+                    raise ValueError(f'provide either `twinx` or `twiny`')
+                ax2.set_position(pos=bbox)
+                _axes[0] = [ax, ax2]
+            # _axes = ax
         else:
             raise NotImplementedError('action not implemented yet.')
 
         axes[name] = _axes
         grids[name] = gs_
-
 
     return fig, axes, grids
 
@@ -320,14 +347,26 @@ def make_random_scatter(ax, title):
     ax.set_title(title)
 
 
-def show_test_figure_layout(fig, axes):
+def show_test_figure_layout(fig, axes, show=True):
     for grid, panels in axes.items():
         # print(panels)
         if len(panels) == 1:
             make_random_scatter(ax=panels[0], title=f"{grid} - ax: {0}")
-        for i, ax in enumerate(panels):
-            make_random_scatter(ax=ax, title=f"{grid} - ax: {i}")
-    fig.show()
+        elif panels.ndim == 1:
+            for i, ax in enumerate(panels):
+                make_random_scatter(ax=ax, title=f"{grid} - ax: {i}")
+        elif panels.ndim == 2:
+            for i, axs in enumerate(panels):
+                for j, ax in enumerate(axs):
+                    make_random_scatter(ax=ax, title=f"{grid} - ax: {i}, {j}")
+
+    fig.show() if show else None
+
+
+def test_axes_plot(ax, show=True):
+    fig, _ax = plt.subplots(figsize=(4, 4))
+    _ax = ax
+    fig.show() if show else None
 
 
 def add_label_grid(grid, s, fig, ax, **kwargs):
@@ -344,7 +383,7 @@ def add_label_grid(grid, s, fig, ax, **kwargs):
     ax.annotate(s=s, xy=xy, xycoords='figure fraction', fontsize=fs, weight='bold')
 
 
-def add_label_axes(s, ax, **kwargs):
+def add_label_axes(text, ax, **kwargs):
     """Add text annotation at xy coordinate (in units of figure fraction) to an axes object."""
     fs = 15 if 'fontsize' not in kwargs else kwargs['fontsize']
     y_adjust = 0.02 if 'y_adjust' not in kwargs else kwargs['y_adjust']
@@ -357,7 +396,20 @@ def add_label_axes(s, ax, **kwargs):
     else:
         assert len(kwargs['xy']) == 2, 'xy coord length is not equal to 2.'
         xy = kwargs['xy']
-    ax.annotate(s=s, xy=xy, xycoords='figure fraction', fontsize=fs, weight='bold')
+    ax.annotate(text=text, xy=xy, xycoords='figure fraction', fontsize=fs, weight='bold')
 
 
+# test scenarios
+if __name__ == '__main__':
+    layout = {
+        'main-top': {'panel_shape': (10, 2),
+                     'bound': (0.05, 0.75, 0.95, 0.95)},
+        'main-bottom-left': {'panel_shape': (1, 1),
+                             'bound': (0.05, 0.55, 0.25, 0.67)},
+        'main-bottom-right': {'panel_shape': (3, 1),
+                              'bound': (0.33, 0.55, 0.87, 0.67),
+                              'wspace': 0.6}
+    }
 
+    fig, axes, grid = make_fig_layout(layout=layout, dpi=100)
+    show_test_figure_layout(fig, axes=axes)
