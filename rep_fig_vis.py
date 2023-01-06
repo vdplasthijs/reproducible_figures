@@ -11,6 +11,7 @@ import copy
 from matplotlib import font_manager
 from matplotlib.transforms import Bbox
 
+
 # %%
 def plot_settings():
     figure = {
@@ -18,18 +19,18 @@ def plot_settings():
     }
 
     axes = {
-        'titlesize': 'small',  ## fontsize of the axes title
+        'titlesize': 'medium',  ## fontsize of the axes title
         'spines.right': False,
         'spines.top': False,
     }
 
     xticks = {
-        'labelsize': 'large',  ## fontsize of the tick labels
+        'labelsize': 'medium',  ## fontsize of the tick labels
         'bottom': True
     }
 
     yticks = {
-        'labelsize': 'large',  ## fontsize of the tick labels
+        'labelsize': 'medium',  ## fontsize of the tick labels
         'left': True,
     }
 
@@ -122,7 +123,7 @@ def equal_xy_lims(ax, start_zero=False):
 
 
 def equal_lims_two_axs(ax1, ax2):
-    '''Set xlim equal to ylim across two axes'''
+    """Set xlim equal to ylim across two axes"""
     xlim_1 = ax1.get_xlim()
     xlim_2 = ax2.get_xlim()
     ylim_1 = ax1.get_ylim()
@@ -140,7 +141,7 @@ def equal_lims_two_axs(ax1, ax2):
 
 
 def equal_lims_n_axs(ax_list):
-    '''Set ax lims equal across list of ax, but xlim and ylim are seperate here'''
+    """Set ax lims equal across list of ax, but xlim and ylim are seperate here"""
     for i_ax, ax in enumerate(ax_list):
         x_min, x_max = ax.get_xlim()
         y_min, y_max = ax.get_ylim()
@@ -238,7 +239,8 @@ def plot_brown_proc(ax_trace=None, ax_hist=None, var=1, n_steps=500,
 
 # %% FUNCTIONS DEFINED BY PRAJAY
 
-def add_scale_bar(ax, loc: tuple, length: Union[tuple, int, float], bartype: str = "L", text: Union[str, tuple, list] = 'scalebar',
+def add_scale_bar(ax, loc: tuple, length: Union[tuple, int, float], bartype: str = "L",
+                  text: Union[str, tuple, list] = 'scalebar',
                   **kwargs):
     """
     Add a scale bar of the specified type to the ax object provided.
@@ -261,7 +263,8 @@ def add_scale_bar(ax, loc: tuple, length: Union[tuple, int, float], bartype: str
     fs = 10 if not 'fs' in kwargs else kwargs['fs']
     if bartype == 'L':
         # one line for x and y scale bars
-        ax.plot([loc[0], loc[0], loc[0] + length[1]], [loc[1] + length[0], loc[1], loc[1]], lw=lw, c='black', clip_on=False, solid_capstyle='butt')
+        ax.plot([loc[0], loc[0], loc[0] + length[1]], [loc[1] + length[0], loc[1], loc[1]], lw=lw, c='black',
+                clip_on=False, solid_capstyle='butt')
 
         # ax.plot([loc[0]] * 2, [loc[1] - (length[0] * 0), loc[1] - (length[0] * 0) + length[0]], color='black',
         #         clip_on=False, lw=lw, solid_capstyle='butt')  # y axis sbar
@@ -269,21 +272,28 @@ def add_scale_bar(ax, loc: tuple, length: Union[tuple, int, float], bartype: str
         assert type(text) is not str, 'incorrect type for L scalebar text provided.'
         assert len(text) == 2, 'L scalebar text argument must be of length: 2'
 
-        ax.text(x=loc[0] - text_offset[0], y=loc[1], s=text[0], fontsize=fs, rotation=0, clip_on=False, horizontalalignment='right')  # y sbar text
-        ax.text(x=loc[0], y=loc[1] - text_offset[1], s=text[1], fontsize=fs, rotation=0, clip_on=False, horizontalalignment='left')  # x sbar text
+        ax.text(x=loc[0] - text_offset[0], y=loc[1], s=text[0], fontsize=fs, rotation=0, clip_on=False,
+                horizontalalignment='right')  # y sbar text
+        ax.text(x=loc[0], y=loc[1] - text_offset[1], s=text[1], fontsize=fs, rotation=0, clip_on=False,
+                horizontalalignment='left')  # x sbar text
     elif bartype == '|':
-        assert type(length) is int or type(length) is float, 'incorrect type for | scalebar length provided. only int or float allowed.'
+        assert type(length) is int or type(
+            length) is float, 'incorrect type for | scalebar length provided. only int or float allowed.'
         assert type(text) is str, f'provide str for | scalebar text: {text}'
         # ax.plot([loc[0]] * 2, [loc[1] - (length[0] * 0), loc[1] - (length[0] * 0) + length[0]], color='black',
         #         clip_on=False, lw=lw, solid_capstyle='butt')  # y axis sbar
         ax.plot([loc[0]] * 2, [loc[1], loc[1] + length], color='black',
                 clip_on=False, lw=lw, solid_capstyle='butt')  # y axis sbar
-        ax.text(x=loc[0] - text_offset[0], y=loc[1] - text_offset[1], s=text, fontsize=fs, rotation=0, clip_on=False)  # y sbar text
+        ax.text(x=loc[0] - text_offset[0], y=loc[1] - text_offset[1], s=text, fontsize=fs, rotation=0,
+                clip_on=False)  # y sbar text
     elif bartype == '_':
-        assert type(length) is int or type(length) is float, 'incorrect type for | scalebar length provided. only int or float allowed.'
+        assert type(length) is int or type(
+            length) is float, 'incorrect type for | scalebar length provided. only int or float allowed.'
         assert type(text) is str, f'provide str for _ scalebar text: {text}'
-        ax.plot((loc[0], loc[0] + length), [loc[1]] * 2, color='black', clip_on=False, lw=lw, solid_capstyle='butt')  # x axis sbar
-        ax.text(x=loc[0], y=loc[1] - text_offset[1], s=text, fontsize=fs, rotation=0, clip_on=False, horizontalalignment='left')  # x sbar text
+        ax.plot((loc[0], loc[0] + length), [loc[1]] * 2, color='black', clip_on=False, lw=lw,
+                solid_capstyle='butt')  # x axis sbar
+        ax.text(x=loc[0], y=loc[1] - text_offset[1], s=text, fontsize=fs, rotation=0, clip_on=False,
+                horizontalalignment='left')  # x sbar text
 
     else:
         raise ValueError(f'{type} not implemented currently.')
@@ -377,7 +387,7 @@ def make_fig_layout(layout: dict = None, **kwargs):
 
 
 def make_random_scatter(ax, title):
-    ax.scatter(np.random.randn(100), np.random.randn(100), s=10, c='skyblue', alpha=0.5)
+    ax.scatter(np.random.randn(100), np.random.randn(100), s=10)
     ax.set_ylabel('an y axis label')
     ax.set_xlabel('an x axis label')
     ax.set_title(title)
@@ -387,14 +397,17 @@ def show_test_figure_layout(fig, axes, show=True):
     for grid, panels in axes.items():
         # print(panels)
         if len(panels) == 1:
-            make_random_scatter(ax=panels[0], title=f"{grid} - ax: {0}")
+            # make_random_scatter(ax=panels[0], title=f"{grid} - ax: {0}")
+            plot_dist(ax=panels[0], title=f"{grid} - ax: {0}")
         elif panels.ndim == 1:
             for i, ax in enumerate(panels):
-                make_random_scatter(ax=ax, title=f"{grid} - ax: {i}")
+                # make_random_scatter(ax=ax, title=f"{grid} - ax: {i}")
+                plot_dist(ax=ax, title=f"{grid} - ax: {i}")
         elif panels.ndim == 2:
             for i, axs in enumerate(panels):
                 for j, ax in enumerate(axs):
-                    make_random_scatter(ax=ax, title=f"{grid} - ax: {i}, {j}")
+                    # make_random_scatter(ax=ax, title=f"{grid} - ax: {i}, {j}")
+                    plot_dist(ax=ax, title=f"{grid} - ax: {i}, {j}")
 
     fig.show() if show else None
 
@@ -450,13 +463,41 @@ if __name__ == '__main__':
     fig, axes, grid = make_fig_layout(layout=layout, dpi=100)
     show_test_figure_layout(fig, axes=axes)
 
+
+# %% example plots
+
+def plot_dist(
+        temperatures=[i for i in range(100, 500, 75)],
+        v=np.arange(0, 800, 10),
+        mass=85 * 1.66e-27,
+        pparam={"xlabel": "xlabel", "ylabel": "ylabel"},
+        ax=None, title=''):
+    _, ax = plt.subplots() if not ax else (None, ax)
+    for T in temperatures:
+        fv = MB_speed(v, mass, T)
+        ax.plot(v/10e1, fv*10e2, label=f"T={T}K")
+        # ax.legend()
+        ax.set_title(title)
+        ax.set(**pparam)
+
+
+def MB_speed(v, m, T):
+    """Maxwell-Boltzmann speed distribution for speeds"""
+    kB = 1.38e-23
+    return (
+            (m / (2 * np.pi * kB * T)) ** 1.5 * 4 * np.pi * v ** 2 * np.exp(-m * v ** 2 / (2 * kB * T))
+    )
+
+
 # %% DEFINITIONS OF SPECIAL CHARACTERS
 
 class SpecialCharacters:
     micro = u"\u00B5"
 
+
 def micro():
     return r'$\mu$'
+
 
 def italic(input):
     return '$\it{' + input + '}$'
