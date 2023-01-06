@@ -11,11 +11,12 @@ import copy
 from matplotlib import font_manager
 from matplotlib.transforms import Bbox
 
-
+# %%
 def plot_settings():
     figure = {
         'dpi': 500,  ## figure dots per inch
     }
+
     axes = {
         'titlesize': 'small',  ## fontsize of the axes title
         'spines.right': False,
@@ -52,14 +53,34 @@ def plot_settings():
     })
 
 
-def despine(ax, keep=[], remove=[]):
+def despine(ax, keep: Union[list, str] = None, remove=None):
     '''Remove top and right spines'''
-    ax.spines['top'].set_visible(False)
-    ax.spines['right'].set_visible(False)
-    for k in keep:
-        ax.spines[k].set_visible(True)
-    for r in remove:
-        ax.spines[r].set_visible(False)
+    if keep is 'all':
+        keep = ['top', 'right', 'bottom', 'left']
+    if remove is 'all':
+        remove = ['top', 'right', 'bottom', 'left']
+    # ax.spines['top'].set_visible(False) if 'top' not in keep or 'top' in remove else ax.spines['top'].set_visible(True)
+    # ax.spines['right'].set_visible(False) if 'right' not in keep or 'right' in remove else ax.spines['right'].set_visible(True)
+    # ax.spines['bottom'].set_visible(False) if 'bottom' not in keep or 'bottom' in remove else ax.spines['bottom'].set_visible(True)
+    # ax.spines['left'].set_visible(False) if 'left' not in keep or 'left' in remove else ax.spines['left'].set_visible(True)
+
+    if keep:
+        for k in keep:
+            ax.spines[k].set_visible(True)
+        if remove is None:
+            for k in ['top', 'right', 'bottom', 'left']:
+                if k not in keep:
+                    ax.spines[k].set_visible(False)
+    if remove:
+        for r in remove:
+            ax.spines[r].set_visible(False)
+        if keep is None:
+            for r in ['top', 'right', 'bottom', 'left']:
+                if r not in remove:
+                    ax.spines[r].set_visible(True)
+    if keep is None and remove is None:
+        ax.spines['top'].set_visible(False)
+        ax.spines['right'].set_visible(False)
 
 
 def naked(ax):
@@ -217,7 +238,7 @@ def plot_brown_proc(ax_trace=None, ax_hist=None, var=1, n_steps=500,
 
 # %% FUNCTIONS DEFINED BY PRAJAY
 
-def add_scale_bar(ax, loc: tuple, length: tuple, bartype: str = "L", text: Union[str, tuple, list] = 'scalebar',
+def add_scale_bar(ax, loc: tuple, length: Union[tuple, int, float], bartype: str = "L", text: Union[str, tuple, list] = 'scalebar',
                   **kwargs):
     """
     Add a scale bar of the specified type to the ax object provided.
@@ -239,23 +260,30 @@ def add_scale_bar(ax, loc: tuple, length: tuple, bartype: str = "L", text: Union
     lw = 0.75 if not 'lw' in kwargs else kwargs['lw']
     fs = 10 if not 'fs' in kwargs else kwargs['fs']
     if bartype == 'L':
-        ax.plot([loc[0]] * 2, [loc[1] - (length[0] * 0), loc[1] - (length[0] * 0) + length[0]], color='black',
-                clip_on=False, lw=lw, solid_capstyle='butt')  # y axis sbar
-        ax.plot((loc[0], loc[0] + length[1]), [loc[1]] * 2, color='black', clip_on=False, lw=lw, solid_capstyle='butt')  # x axis sbar
+        # one line for x and y scale bars
+        ax.plot([loc[0], loc[0], loc[0] + length[1]], [loc[1] + length[0], loc[1], loc[1]], lw=lw, c='black', clip_on=False, solid_capstyle='butt')
+
+        # ax.plot([loc[0]] * 2, [loc[1] - (length[0] * 0), loc[1] - (length[0] * 0) + length[0]], color='black',
+        #         clip_on=False, lw=lw, solid_capstyle='butt')  # y axis sbar
+        # ax.plot((loc[0], loc[0] + length[1]), [loc[1]] * 2, color='black', clip_on=False, lw=lw, solid_capstyle='butt')  # x axis sbar
         assert type(text) is not str, 'incorrect type for L scalebar text provided.'
         assert len(text) == 2, 'L scalebar text argument must be of length: 2'
 
         ax.text(x=loc[0] - text_offset[0], y=loc[1], s=text[0], fontsize=fs, rotation=0, clip_on=False, horizontalalignment='right')  # y sbar text
         ax.text(x=loc[0], y=loc[1] - text_offset[1], s=text[1], fontsize=fs, rotation=0, clip_on=False, horizontalalignment='left')  # x sbar text
     elif bartype == '|':
-        ax.plot([loc[0]] * 2, [loc[1] - (length[0] * 0), loc[1] - (length[0] * 0) + length[0]], color='black',
-                clip_on=False, lw=lw, solid_capstyle='butt')  # y axis sbar
+        assert type(length) is int or type(length) is float, 'incorrect type for | scalebar length provided. only int or float allowed.'
         assert type(text) is str, f'provide str for | scalebar text: {text}'
-        ax.text(x=loc[0] - text_offset[0], y=loc[1] - text_offset[1], s=text, fontsize=fs, rotation=0, clip_on=False)
+        # ax.plot([loc[0]] * 2, [loc[1] - (length[0] * 0), loc[1] - (length[0] * 0) + length[0]], color='black',
+        #         clip_on=False, lw=lw, solid_capstyle='butt')  # y axis sbar
+        ax.plot([loc[0]] * 2, [loc[1], loc[1] + length], color='black',
+                clip_on=False, lw=lw, solid_capstyle='butt')  # y axis sbar
+        ax.text(x=loc[0] - text_offset[0], y=loc[1] - text_offset[1], s=text, fontsize=fs, rotation=0, clip_on=False)  # y sbar text
     elif bartype == '_':
-        ax.plot((loc[0], loc[0] + length[1]), [loc[1]] * 2, color='black', clip_on=False, lw=lw, solid_capstyle='butt')  # x axis sbar
+        assert type(length) is int or type(length) is float, 'incorrect type for | scalebar length provided. only int or float allowed.'
         assert type(text) is str, f'provide str for _ scalebar text: {text}'
-        ax.text(x=loc[0] - text_offset[0], y=loc[1] - text_offset[1], s=text, fontsize=fs, rotation=0, clip_on=False, horizontalalignment='right')
+        ax.plot((loc[0], loc[0] + length), [loc[1]] * 2, color='black', clip_on=False, lw=lw, solid_capstyle='butt')  # x axis sbar
+        ax.text(x=loc[0], y=loc[1] - text_offset[1], s=text, fontsize=fs, rotation=0, clip_on=False, horizontalalignment='left')  # x sbar text
 
     else:
         raise ValueError(f'{type} not implemented currently.')
@@ -266,10 +294,18 @@ def add_scale_bar(ax, loc: tuple, length: tuple, bartype: str = "L", text: Union
 
 def make_fig_layout(layout: dict = None, **kwargs):
     """
-    main idea is that the grid dictionary contains the necessary relationships for the layout.
-    layout arg:
-        # panel_shape = ncols x nrows
+    Create the fig and axes object to use for plotting based on a grid layout dictionary which describes the necessary relationships for the layout.
+    :param layout: (name of panel): {'panel_shape': (ncols, nrows, 'twinx' or 'twiny'), 'bound': (l, t, r, b), 'wspace': float, 'hspace': float}
+
+    layout: dictionary key relates to one panel from within the overall figures. arbitrary number of individual layout dictionaries can be provided as input to create each panel.
+        # panel_shape = describes the number and layout of sub-panels; ncols x nrows, twinx or twiny
         # bound = l, t, r, b
+        # wspace or hspace = space between panels
+
+    >>> dpi = 300
+    >>> layout = {'A': {'panel_shape': (1, 1,'twinx'), 'bound': (0.15, 0.75, 0.45, 0.90)}, 'A"': {'panel_shape': (1, 2), 'bound': (0.15, 0.60, 0.45, 0.90), 'hspace': 0.6}, 'B': {'panel_shape': (1, 1), 'bound': (0.6, 0.75, 0.67, 0.90)}}
+    >>> fig, axes, grid = make_fig_layout(layout=layout, dpi=dpi)
+    >>> axA = axes['A']
 
     """
 
@@ -341,7 +377,7 @@ def make_fig_layout(layout: dict = None, **kwargs):
 
 
 def make_random_scatter(ax, title):
-    ax.scatter(np.random.randn(100), np.random.randn(100), s=50, c='forestgreen')
+    ax.scatter(np.random.randn(100), np.random.randn(100), s=10, c='skyblue', alpha=0.5)
     ax.set_ylabel('an y axis label')
     ax.set_xlabel('an x axis label')
     ax.set_title(title)
@@ -413,3 +449,19 @@ if __name__ == '__main__':
 
     fig, axes, grid = make_fig_layout(layout=layout, dpi=100)
     show_test_figure_layout(fig, axes=axes)
+
+# %% DEFINITIONS OF SPECIAL CHARACTERS
+
+class SpecialCharacters:
+    micro = u"\u00B5"
+
+def micro():
+    return r'$\mu$'
+
+def italic(input):
+    return '$\it{' + input + '}$'
+
+# %% UTILITIES
+
+# todo - functions
+#  - save figure
