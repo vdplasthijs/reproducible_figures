@@ -53,7 +53,7 @@ def equal_lims_two_axs(ax1, ax2):
     xlim_2 = ax2.get_xlim()
     ylim_1 = ax1.get_ylim()
     ylim_2 = ax2.get_ylim()
-     
+
     new_x_min = np.minimum(xlim_1[0], xlim_2[0])
     new_x_max = np.maximum(xlim_1[1], xlim_2[1])
     new_y_min = np.minimum(ylim_1[0], ylim_2[0])
@@ -78,7 +78,7 @@ def equal_lims_n_axs(ax_list):
 
         else:
             if x_min < x_min_min:
-                x_min_min = copy.deepcopy(x_min)           
+                x_min_min = copy.deepcopy(x_min)
             if x_max > x_max_max:
                 x_max_max = copy.deepcopy(x_max)
             if y_min < y_min_min:
@@ -90,19 +90,61 @@ def equal_lims_n_axs(ax_list):
         ax.set_xlim([x_min_min, x_max_max])
         ax.set_ylim([y_min_min, y_max_max])
 
-def remove_xticklabels(ax):  
+def remove_xticklabels(ax):
     '''remove x ticklabels but keep ticks'''
     ax.set_xticklabels(['' for x in ax.get_xticklabels()])
 
-def remove_yticklabels(ax):  
+def remove_yticklabels(ax):
     '''remove y ticklabels but keep ticks'''
     ax.set_yticklabels(['' for x in ax.get_yticklabels()])
 
-def remove_both_ticklabels(ax): 
+def remove_both_ticklabels(ax):
     '''both x and y'''
     remove_xticklabels(ax)
     remove_yticklabels(ax)
 
+def add_panel_label(ax, fig, label_letter='A', label_ind=None, uppercase=True,
+                    x_override=None, y_override=None, weight='bold', fontsize=None, verbose=0):
+    '''Add a panel label to ax. 
+    Either the str given by label_letter or the i-th letter given by label_ind. 
+    Panel label is automatically placed at top-left corner. But can be overriden by using x_override and y_override. 
+    By default using regular fontsize, but can be overriden by setting fontsize. 
+    '''
+    if label_letter is None:
+        assert type(label_ind) == int, f'label_ind should be an int, but is a {type(label_ind)}'
+        letters = 'abcdefghijklmnopqrstuvwxyz'
+        label_letter = letters[label_ind]
+        if uppercase:
+            label_letter = label_letter.upper() 
+    else:
+        assert type(label_letter) == str, f'label_letter should be a str, but is a {type(label_letter)}'         
+        if label_ind is not None:
+            print('WARNING: both label_letter and label_ind are not None. Using label_letter.')   
+
+    ## Get left-most x lim of all elements of ax
+    ## Get top-most y lim of all elements of ax
+    if fig is not None:
+        bbox_fig = ax.get_tightbbox(fig.canvas.get_renderer())  # use bounding box of ax object
+        xcoord_left = bbox_fig.xmin
+        ycoord_top = bbox_fig.ymax
+    else:  # use bounding boxes of yaxis and title
+        print('This is unlikely to work -- best to pass fig to add_panel_label().')
+        xcoord_left = ax.yaxis.get_tightbbox(None).xmin  # alternatively, get lims from yaxis & title. 
+        ycoord_top = ax.title.get_tightbbox(None).ymax
+
+    ## Override if necessary
+    if x_override is not None:
+        xcoord_left = x_override
+    if y_override is not None:
+        ycoord_top = y_override
+
+    ## Create label, if verbose print coords.
+    if verbose > 0:
+        print(f'Coordinates: x {xcoord_left}, y {ycoord_top}')
+    if fontsize is None:
+        fontsize = plt.rcParams['font.size']
+    ax.annotate(s=label_letter, xy=(xcoord_left, ycoord_top), xycoords='figure pixels', 
+                ha='left', va='top', weight=weight, fontsize=fontsize)
 
 ##############################
 ###   SPECIFIC FUNCTIONS FOR THIS TUTORIAL
@@ -134,7 +176,7 @@ def plot_normal_distr(ax=None, n_tp=500, mean_distr=0, std_distr=1, alpha=1, col
     ax.set_xlabel('Some variable')
     ax.set_ylabel('PDF')
 
-def plot_brown_proc(ax_trace=None, ax_hist=None, var=1, n_steps=500, 
+def plot_brown_proc(ax_trace=None, ax_hist=None, var=1, n_steps=500,
                     plot_ylabel=True, colour='k'):
     '''Sample brownian motion & plot trace and histogram'''
     gauss_samples = np.random.randn(n_steps) * np.sqrt(var)
@@ -149,7 +191,7 @@ def plot_brown_proc(ax_trace=None, ax_hist=None, var=1, n_steps=500,
     ax_trace.set_xlabel('Iteration')
     if plot_ylabel:
         ax_trace.set_ylabel('Activity')
-    
+
     ax_hist.hist(brown_motion, bins=np.linspace(-100, 100, 30),
                  facecolor=colour, edgecolor='k', linewidth=1)
     ax_hist.set_xlabel('Activity')
