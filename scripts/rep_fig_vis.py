@@ -1,11 +1,27 @@
+##############################
+## GENERAL PLOTTING FUNCTIONS
+## Author: Thijs van der Plas (github.com/vdplasthijs)
+##############################
+ 
 import numpy as np
 import matplotlib.pyplot as plt
-import scipy.stats
 import copy
 
-##############################
-###   GENERAL PLOTTING FUNCTIONS
-##############################
+def dummy_example_functions(fig=None, ax=None):
+    '''Example of common input arguments'''
+
+    if ax is None:
+        if fig is None:
+            ## Create both a figure & axis handle
+            fig, ax = plt.subplot(111)
+        else:
+            ## Create single axis on figure 
+            ax = fig.add_subplot(111)
+    else: 
+        ## use provided axis, figure must already exist so don't create new one:
+        pass 
+
+    return fig, ax 
 
 def despine(ax):
     '''Remove top and right spines'''
@@ -103,8 +119,9 @@ def remove_both_ticklabels(ax):
     remove_xticklabels(ax)
     remove_yticklabels(ax)
 
-def add_panel_label(ax, fig, label_letter='A', label_ind=None, uppercase=True,
-                    x_override=None, y_override=None, weight='bold', fontsize=None, verbose=0):
+def add_panel_label(ax, fig, label_letter='A', label_ind=None, uppercase=True, use_fig_bbox=False,
+                    x_override=None, y_override=None, x_offset=0, y_offset=0,
+                    weight='bold', fontsize=None, verbose=0):
     '''Add a panel label to ax. 
     Either the str given by label_letter or the i-th letter given by label_ind. 
     Panel label is automatically placed at top-left corner. But can be overriden by using x_override and y_override. 
@@ -123,14 +140,19 @@ def add_panel_label(ax, fig, label_letter='A', label_ind=None, uppercase=True,
 
     ## Get left-most x lim of all elements of ax
     ## Get top-most y lim of all elements of ax
-    if fig is not None:
+    if use_fig_bbox:
         bbox_fig = ax.get_tightbbox(fig.canvas.get_renderer())  # use bounding box of ax object
         xcoord_left = bbox_fig.xmin
         ycoord_top = bbox_fig.ymax
     else:  # use bounding boxes of yaxis and title
-        print('This is unlikely to work -- best to pass fig to add_panel_label().')
-        xcoord_left = ax.yaxis.get_tightbbox(None).xmin  # alternatively, get lims from yaxis & title. 
-        ycoord_top = ax.title.get_tightbbox(None).ymax
+        xcoord_left = ax.yaxis.get_tightbbox(fig.canvas.get_renderer()).xmin  # alternatively, get lims from yaxis & title. 
+        ycoord_top = ax.title.get_tightbbox(fig.canvas.get_renderer()).ymax
+
+    ## Offset if necessary:
+    if x_offset is not None:
+        xcoord_left += x_offset
+    if y_offset is not None:
+        ycoord_top += y_offset
 
     ## Override if necessary
     if x_override is not None:
@@ -145,55 +167,3 @@ def add_panel_label(ax, fig, label_letter='A', label_ind=None, uppercase=True,
         fontsize = plt.rcParams['font.size']
     ax.annotate(s=label_letter, xy=(xcoord_left, ycoord_top), xycoords='figure pixels', 
                 ha='left', va='top', weight=weight, fontsize=fontsize)
-
-##############################
-###   SPECIFIC FUNCTIONS FOR THIS TUTORIAL
-##############################
-
-def plot_sin_one_period(ax=None, n_tp=500, phase=0, alpha=1, colour='k'):
-    '''Create sine over 1 period with offset phase'''
-    if ax is None:
-        ax = plt.subplot(111)
-
-    t_array = np.linspace(0, 2 * np.pi, n_tp)
-    sin_array = np.sin(t_array + phase)
-
-    ax.plot(t_array, sin_array, linewidth=3, alpha=alpha, c=colour)
-    ax.set_xlabel('Time (s)')
-    ax.set_ylabel('Activation (a.u.)')
-    ax.set_title('Some simple graphs', y=1.05, fontdict={'weight': 'bold'})
-
-
-def plot_normal_distr(ax=None, n_tp=500, mean_distr=0, std_distr=1, alpha=1, colour='k'):
-    '''Create sine over 1 period with offset phase'''
-    if ax is None:
-        ax = plt.subplot(111)
-
-    t_array = np.linspace(-3, 3, n_tp)
-    norm_array = scipy.stats.norm.pdf(t_array, loc=mean_distr, scale=std_distr)
-
-    ax.plot(t_array, norm_array, linewidth=3, alpha=alpha, c=colour)
-    ax.set_xlabel('Some variable')
-    ax.set_ylabel('PDF')
-
-def plot_brown_proc(ax_trace=None, ax_hist=None, var=1, n_steps=500,
-                    plot_ylabel=True, colour='k'):
-    '''Sample brownian motion & plot trace and histogram'''
-    gauss_samples = np.random.randn(n_steps) * np.sqrt(var)
-    brown_motion = np.cumsum(gauss_samples)
-    time_array = np.arange(n_steps)
-
-    if ax_trace is None or ax_hist is None:
-        fig, ax = plt.subplots(1, 2)
-        ax_trace, ax_hist = ax
-
-    ax_trace.plot(time_array, brown_motion, linewidth=2, c=colour)
-    ax_trace.set_xlabel('Iteration')
-    if plot_ylabel:
-        ax_trace.set_ylabel('Activity')
-
-    ax_hist.hist(brown_motion, bins=np.linspace(-100, 100, 30),
-                 facecolor=colour, edgecolor='k', linewidth=1)
-    ax_hist.set_xlabel('Activity')
-    if plot_ylabel:
-        ax_hist.set_ylabel('Frequency')

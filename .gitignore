@@ -1,3 +1,5 @@
 __pycache__/*
+scripts/__pycache__/*
 .ipynb_checkpoints/*
 *.code-workspace 
+tutorial/__pycache__/*
