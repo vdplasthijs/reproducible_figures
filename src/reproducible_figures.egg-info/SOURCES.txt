@@ -1,0 +1,10 @@
+LICENSE
+README.md
+setup.py
+src/reproducible_figures/__init__.py
+src/reproducible_figures/rep_fig_vis.py
+src/reproducible_figures.egg-info/PKG-INFO
+src/reproducible_figures.egg-info/SOURCES.txt
+src/reproducible_figures.egg-info/dependency_links.txt
+src/reproducible_figures.egg-info/not-zip-safe
+src/reproducible_figures.egg-info/top_level.txt

@@ -1,0 +1,19 @@
+Metadata-Version: 2.1
+Name: reproducible-figures
+Version: 0.1
+Summary: Functions to help implement a reproducible figure making process in Python
+Home-page: http://github.com/prajayshah/reproducible_figures
+Author: Prajay Shah
+Author-email: prajay.shah@mail.utoronto.ca
+License: UNKNOWN
+Platform: UNKNOWN
+Requires-Python: >=3.6
+Description-Content-Type: text/markdown
+License-File: LICENSE
+
+# Reproducible figures
+Functions to help implement a reproducible figure making process in Python. 
+
+Thijs's tutorial/explainer slides available in repo!
+
+
