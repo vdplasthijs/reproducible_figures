@@ -165,5 +165,6 @@ def add_panel_label(ax, fig, label_letter='A', label_ind=None, uppercase=True, u
         print(f'Coordinates: x {xcoord_left}, y {ycoord_top}')
     if fontsize is None:
         fontsize = plt.rcParams['font.size']
-    ax.annotate(s=label_letter, xy=(xcoord_left, ycoord_top), xycoords='figure pixels', 
+
+    ax.annotate(label_letter, xy=(xcoord_left, ycoord_top), xycoords='figure pixels', 
                 ha='left', va='top', weight=weight, fontsize=fontsize)
