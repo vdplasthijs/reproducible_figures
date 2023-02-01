@@ -4,7 +4,7 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setup(
-    name="repfigvis",
+    name="reproducible_figures",
     version="0.1",
     long_description=long_description,
     long_description_content_type='text/markdown',
