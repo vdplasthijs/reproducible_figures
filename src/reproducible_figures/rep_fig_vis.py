@@ -390,6 +390,7 @@ def make_random_scatter(ax, title):
 
 
 def show_test_figure_layout(fig, axes, show=True):
+    """Fill an input figure layout and axes subplots with data to help visualize the overall figure layout"""
     for grid, panels in axes.items():
         # print(panels)
         if len(panels) == 1:
