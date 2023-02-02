@@ -60,10 +60,6 @@ def despine(ax, keep: Union[list, str] = None, remove=None):
         keep = ['top', 'right', 'bottom', 'left']
     if remove is 'all':
         remove = ['top', 'right', 'bottom', 'left']
-    # ax.spines['top'].set_visible(False) if 'top' not in keep or 'top' in remove else ax.spines['top'].set_visible(True)
-    # ax.spines['right'].set_visible(False) if 'right' not in keep or 'right' in remove else ax.spines['right'].set_visible(True)
-    # ax.spines['bottom'].set_visible(False) if 'bottom' not in keep or 'bottom' in remove else ax.spines['bottom'].set_visible(True)
-    # ax.spines['left'].set_visible(False) if 'left' not in keep or 'left' in remove else ax.spines['left'].set_visible(True)
 
     if keep:
         for k in keep:
