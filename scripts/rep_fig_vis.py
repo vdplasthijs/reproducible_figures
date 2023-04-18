@@ -168,3 +168,8 @@ def add_panel_label(ax, fig, label_letter='A', label_ind=None, uppercase=True, u
 
     ax.annotate(label_letter, xy=(xcoord_left, ycoord_top), xycoords='figure pixels', 
                 ha='left', va='top', weight=weight, fontsize=fontsize)
+    
+    ## align ylabels:
+    # ax.text(s=label_letter, x=xcoord_left, y=ycoord_top, ha='left', va='bottom', 
+    #         transform=ax.transAxes, fontweight=weight, fontsize=fontsize, clip_on=False)
+
