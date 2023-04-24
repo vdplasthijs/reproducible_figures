@@ -8,6 +8,24 @@ import matplotlib.pyplot as plt
 import copy
 import scipy.stats
 
+def plot_scatter_data_distr(ax=None, data=None, name_data=None,
+                            x_label='', y_label='', 
+                            title=None, plot_legend=False):
+    if ax is None:
+        ax = plt.subplot(111)
+    assert type(data) == np.ndarray, 'Data must be a numpy array'
+    assert data.shape[1] == 2, 'Data must have 2 columns'
+
+    ax.scatter(data[:, 0], data[:, 1], label=name_data)
+    if plot_legend:
+        ax.legend()
+    ax.set_xlabel(x_label)
+    ax.set_ylabel(y_label)
+    if title is not None:
+        ax.set_title(title)
+    
+    return ax
+
 def plot_sin_one_period(ax=None, n_tp=500, phase=0, alpha=1, colour='k'):
     '''Create sine over 1 period with offset phase'''
     if ax is None:
@@ -55,3 +73,4 @@ def plot_brown_proc(ax_trace=None, ax_hist=None, var=1, n_steps=500,
     ax_hist.set_xlabel('Activity')
     if plot_ylabel:
         ax_hist.set_ylabel('Frequency')
+

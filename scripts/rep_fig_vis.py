@@ -6,10 +6,10 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import copy
+import unittest 
 
 def dummy_example_functions(fig=None, ax=None):
     '''Example of common input arguments'''
-
     if ax is None:
         if fig is None:
             ## Create both a figure & axis handle
@@ -173,3 +173,8 @@ def add_panel_label(ax, fig, label_letter='A', label_ind=None, uppercase=True, u
     # ax.text(s=label_letter, x=xcoord_left, y=ycoord_top, ha='left', va='bottom', 
     #         transform=ax.transAxes, fontweight=weight, fontsize=fontsize, clip_on=False)
 
+class TestPlottingFunction(unittest.TestCase):
+    def __init__(self, plotting_function,  methodName: str = "runTest") -> None:
+        super().__init__(methodName)    
+        self.plotting_function = plotting_function
+     

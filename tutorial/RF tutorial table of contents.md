@@ -1,16 +1,7 @@
-## Introduction
-
-This folder contains tutorials to create reproducible figures in Python. (See `reproducible_figures/slides reproducible figs - Thijs van der Plas - 15 June 2022.pdf` for a conceptual introduction on reproducible figures). The purpose of these tutorials is to explain how to create fully reproducible, multi-panel figures at publication level using standard plotting library `matplotlib` (and others?), as well as the new functions in this package `rep_fig_vis`. Where useful, links are provided to other tutorials/examples.
-
-The tutorial is split up in different Jupyter notebooks by topic, and can be done in sequence or separately. Good luck and have fun!
-
-
-## Principles:
-See slides.
 
 ## ToC v2:
 
-### 0. Introduction:
+### 0. Introduction & overview:
 - Show screenshots (but NOT code) of example. (Fundamental break-down)
 
 ### Step 1: preparing your individual panels
@@ -48,11 +39,15 @@ See slides.
 - Importing external vector files (white background?)
 - File formats (tiff, jpg, png .. ?)
 - `imshow` without interpolation 
+_- Could probably go in another chapter?_
 
-### Bonus 2: geospatial figures
+### Bonus 2: bringing it all together:
+
+
+### Bonus 3: geospatial figures
 - Vector and raster overlays.
 
-### Bonus 3: interactive figures
+### Bonus 4: interactive figures
 - Sliders etc. 
 - `qt` but not in juptyer
 
