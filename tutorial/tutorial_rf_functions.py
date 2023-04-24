@@ -100,3 +100,46 @@ def plot_gaussian_profile(ax=None, cax=None, fig=None):
 
     ax.set_title('2D Gaussian profile')
     return (ax, cax)
+
+def plot_distr(ax=None, distr_name='uniform', color_line='k', histtype='bar'):
+    n_samples = 10000
+    assert distr_name in ['uniform', 'gaussian', 'poisson', 'exp'], f'Distribution {distr_name} not supported'
+
+    if ax is None:
+        ax = plt.subplot(111)
+
+    if distr_name == 'uniform':
+        distr = np.random.uniform(size=n_samples)
+        full_name = 'Uniform distribution'
+    elif distr_name == 'gaussian':
+        distr = np.random.normal(size=n_samples)
+        full_name = 'Gaussian distribution'
+    elif distr_name == 'poisson':
+        distr = np.random.poisson(size=n_samples)
+        full_name = 'Poisson distribution'
+    elif distr_name == 'exp':
+        distr = np.random.exponential(size=n_samples)
+        full_name = 'Exponential distribution'
+
+    tmp = ax.hist(distr, bins=20, density=True, histtype=histtype,
+            linewidth=2, color=color_line, label=full_name.split(' ')[0])
+    pdf_points = np.concatenate((np.array([0]), tmp[0]))#, np.array([0])))
+
+    ax.set_title(full_name)
+    ax.set_xlabel('Sample')
+    ax.set_ylabel('PDF')
+    return ax, pdf_points
+
+def plot_cdf(ax=None, pdf=None, color_line='k'):
+    if ax is None:
+        ax = plt.subplot(111)
+
+    # pdf = np.sort(pdf)
+
+    cdf = np.cumsum(pdf) / np.sum(pdf)
+    ax.plot(cdf, color=color_line, linewidth=2)
+    ax.set_title('Cumulative distribution function')
+    ax.set_xlabel('Normalised sample')
+    ax.set_ylabel('CDF')
+
+    return ax
