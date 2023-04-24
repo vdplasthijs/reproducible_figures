@@ -7,6 +7,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 import copy
 import scipy.stats
+import seaborn as sns
+import sys
+sys.path.append('../scripts/')
+import rep_fig_vis as rfv
 
 def plot_scatter_data_distr(ax=None, data=None, name_data=None,
                             x_label='', y_label='', 
@@ -74,3 +78,25 @@ def plot_brown_proc(ax_trace=None, ax_hist=None, var=1, n_steps=500,
     if plot_ylabel:
         ax_hist.set_ylabel('Frequency')
 
+def plot_gaussian_profile(ax=None, cax=None, fig=None):
+    m, n = 100, 100
+    lims = (-3, 3) # support of the PDF
+    xx, yy = np.meshgrid(np.linspace(*lims, m), np.linspace(*lims, n))
+    points = np.stack((xx, yy), axis=-1)
+    mean = (1, 2) # Whatever your (i, j) is
+    covariance = 15.0
+    pdf = scipy.stats.multivariate_normal.pdf(points, mean, covariance)
+    pdf = pdf / np.max(pdf)
+
+    hm = ax.imshow(pdf)
+    if cax is None:
+        fig.colorbar(hm, ax=ax)
+    else:
+        fig.colorbar(hm, cax=cax)
+    
+    # sns.heatmap(pdf, ax=ax, cbar_ax=cax, 
+    #             cbar_kws={'orientation': 'vertical', 'label': 'PDF'})
+    rfv.naked(ax)  # get rid of the axis labels and ticks 
+
+    ax.set_title('2D Gaussian profile')
+    return (ax, cax)
