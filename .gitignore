@@ -3,3 +3,4 @@ scripts/__pycache__/*
 .ipynb_checkpoints/*
 *.code-workspace 
 tutorial/__pycache__/*
+tutorial/generated_figures/__pycache__/*
