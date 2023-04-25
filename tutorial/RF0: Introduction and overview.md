@@ -22,6 +22,8 @@ This will mainly be covered in Steps 1, 4 and 5. Using modules avoids errors due
 
 3. Separate data analysis (functions) from plotting (functions)
 
+4. Take inspiration from other reproducible figures!
+If (published) figures are reproducible and the code is public, it should be easy to look up the code that generated particular bits that you might want to replicate. For example, the figures of [this paper by me](https://proceedings.mlr.press/v199/plas22a/plas22a.pdf) can be found [at its repository](https://github.com/vdplasthijs/eavesdropping/blob/master/Figure%20generation%20notebook.ipynb) (as also linked in the paper). Arguably, data visualisation code is some of the easiest code to share and reuse, as others can directly see the output!
 
 ## Conclusion:
 Good luck and have fun!

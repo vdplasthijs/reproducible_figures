@@ -17,6 +17,10 @@ def plot_scatter_data_distr(ax=None, data=None, name_data=None,
                             title=None, plot_legend=False):
     if ax is None:
         ax = plt.subplot(111)
+
+    if data is None:
+        data = np.random.randn(100, 2)
+
     assert type(data) == np.ndarray, 'Data must be a numpy array'
     assert data.shape[1] == 2, 'Data must have 2 columns'
 
@@ -78,7 +82,8 @@ def plot_brown_proc(ax_trace=None, ax_hist=None, var=1, n_steps=500,
     if plot_ylabel:
         ax_hist.set_ylabel('Frequency')
 
-def plot_gaussian_profile(ax=None, cax=None, fig=None):
+def plot_gaussian_profile(ax=None, cax=None, fig=None, remove_spines=True,
+                          title='2D Gaussian profile'):
     m, n = 100, 100
     lims = (-3, 3) # support of the PDF
     xx, yy = np.meshgrid(np.linspace(*lims, m), np.linspace(*lims, n))
@@ -89,16 +94,16 @@ def plot_gaussian_profile(ax=None, cax=None, fig=None):
     pdf = pdf / np.max(pdf)
 
     hm = ax.imshow(pdf)
-    if cax is None:
-        fig.colorbar(hm, ax=ax)
-    else:
-        fig.colorbar(hm, cax=cax)
-    
-    # sns.heatmap(pdf, ax=ax, cbar_ax=cax, 
-    #             cbar_kws={'orientation': 'vertical', 'label': 'PDF'})
-    rfv.naked(ax)  # get rid of the axis labels and ticks 
+    if fig is not None:
+        if cax is None:
+            fig.colorbar(hm, ax=ax)
+        else:
+            fig.colorbar(hm, cax=cax)
+        
+    if remove_spines:
+        rfv.naked(ax)  # get rid of the axis labels and ticks 
 
-    ax.set_title('2D Gaussian profile')
+    ax.set_title(title)
     return (ax, cax)
 
 def plot_distr(ax=None, distr_name='uniform', color_line='k', histtype='bar'):
