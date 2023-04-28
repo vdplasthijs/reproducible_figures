@@ -6,6 +6,8 @@ Welcome to this tutorial for creating _reproducible figures_ in Python. The tuto
 
 The purpose of these tutorials is to explain how to create fully reproducible, multi-panel figures at publication level using standard plotting library `matplotlib`, as well as the new functions in this package `rep_fig_vis`. Other fantastic plotting libraries for Python exist (`seaborn`, `plotly`, `bokeh`, ..), but for simplicity we will use just `matplotlib`, which can covers almost all use-cases (and is compatible with `seaborn`). 
 
+Importantly, this tutorial is by no means an exhaustive resource to all possible functionalities. Instead it's brief, and sticks to the core functionalities needed to create reproducible figures, with some common customisation options highlighted. Other (more exhaustive) resources are linked at the bottom of each tutorial page.
+
 First, let's define __reproducible figures (RFs)__ as _"A (multi-panel) figure that is produced __completely__ and __finally__ by code, and can therefore be reproduced (by anyone)"_. A common alternative is to use plotting libraries to create individual panels, but compile and polish them manually using graphics software such as Illustrator or Inkscape. 
 
 ## What benefits do RFs offer?
@@ -14,15 +16,18 @@ First, let's define __reproducible figures (RFs)__ as _"A (multi-panel) figure t
 
 ## RF principles
 These are the key principles that underlie this tutorial:
-1. Separate panel _content_ from panel _lay-out_. 
+1. **Separate panel _content_ from panel _lay-out_.**
 This is the key principle for creatings RFs, and will be covered in Steps 1-3. By separating content and lay-out, panels can be flexibly (re-)organised, reused and adjusted/updated. 
 
-2. Work with Python modules (`.py` files), and use Jupyter workspaces (`.ipynb`) for visualising the end result only. 
+2. **Work with Python modules (`.py` files), and use Jupyter workspaces (`.ipynb`) for visualising the end result only.** 
 This will mainly be covered in Steps 1, 4 and 5. Using modules avoids errors due to latent variables still active in the workspace, allows for easy version control (e.g., `git`), and - crucially - facilitates the easy reuse of code.
 
-3. Separate data analysis (functions) from plotting (functions)
+3. **Separate data analysis (functions) from plotting (functions)**
 
+4. **Take inspiration from other reproducible figures!**
+If (published) figures are reproducible and the code is public, it should be easy to look up the code that generated particular bits that you might want to replicate. For example, the figures of [this paper](https://proceedings.mlr.press/v199/plas22a/plas22a.pdf) (by me) can be found [at its repository](https://github.com/vdplasthijs/eavesdropping/blob/master/Figure%20generation%20notebook.ipynb) (as also linked in the paper). Arguably, data visualisation code is some of the easiest code to share and reuse, as others can directly see the output!
 
 ## Conclusion:
 Good luck and have fun!
 
+[Start tutorial](https://github.com/vdplasthijs/reproducible_figures/blob/main/tutorial/RF1:%20Preparing%20individual%20panels.ipynb)

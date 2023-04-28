@@ -49,6 +49,22 @@ def set_fontsize(font_size=12):
     plt.rcParams.update(params)
     print(f'Font size is set to {font_size}')
 
+def get_list_ticks(ax, axis='x'):
+    assert axis in ['x', 'y']
+    if axis == 'x':
+        return ax.get_xticks().tolist()
+    elif axis == 'y':
+        return ax.get_yticks().tolist()
+
+def get_list_ticklabels(ax, axis='x'):
+    '''Note: only works if figure has been drawn. Otherwise returns empty list.
+    To draw figure, use plt.show() or plt.draw()'''
+    assert axis in ['x', 'y']
+    if axis == 'x':
+        return [x.get_text() for x in ax.get_xticklabels()]
+    elif axis == 'y':
+        return [x.get_text() for x in ax.get_yticklabels()]
+    
 def equal_xy_lims(ax, start_zero=False):
     '''Set xlim equal to ylim (by their max)'''
     xlims = ax.get_xlim()
