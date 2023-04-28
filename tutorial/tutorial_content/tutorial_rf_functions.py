@@ -5,9 +5,7 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
-import copy
 import scipy.stats
-import seaborn as sns
 import sys
 sys.path.append('../scripts/')
 import rep_fig_vis as rfv
