@@ -1,0 +1,10 @@
+name: rf_env
+channels:
+  - defaults
+dependencies:
+  - python=3.7
+  - matplotlib
+  - numpy
+  - scipy
+  - jupyter
+prefix: /home/tplas/anaconda3/envs/rf_env
