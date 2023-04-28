@@ -34,6 +34,21 @@ def plot_scatter_data_distr(ax=None, data=None, name_data=None,
     
     return ax
 
+def plot_scatter_along_line(ax=None, n=100, slope=1, limit_data=10, 
+                            noise=1):
+    
+    if ax is None:
+        ax = plt.subplot(111)
+
+    x = np.linspace(0, limit_data, n)
+    y = slope * x + np.random.randn(n) * noise
+
+    ax.scatter(x, y)
+    # ax.set_xlabel('x')
+    # ax.set_ylabel('y')
+
+    return ax
+
 def plot_sin_one_period(ax=None, n_tp=500, phase=0, alpha=1, colour='k'):
     '''Create sine over 1 period with offset phase'''
     if ax is None:

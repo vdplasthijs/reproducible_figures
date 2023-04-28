@@ -6,6 +6,8 @@ Welcome to this tutorial for creating _reproducible figures_ in Python. The tuto
 
 The purpose of these tutorials is to explain how to create fully reproducible, multi-panel figures at publication level using standard plotting library `matplotlib`, as well as the new functions in this package `rep_fig_vis`. Other fantastic plotting libraries for Python exist (`seaborn`, `plotly`, `bokeh`, ..), but for simplicity we will use just `matplotlib`, which can covers almost all use-cases (and is compatible with `seaborn`). 
 
+Importantly, this tutorial is by no means an exhaustive resource to all possible functionalities. Instead it's brief, and sticks to the core functionalities needed to create reproducible figures, with some common customisation options highlighted. Other (more exhaustive) resources are linked at the bottom of each tutorial page.
+
 First, let's define __reproducible figures (RFs)__ as _"A (multi-panel) figure that is produced __completely__ and __finally__ by code, and can therefore be reproduced (by anyone)"_. A common alternative is to use plotting libraries to create individual panels, but compile and polish them manually using graphics software such as Illustrator or Inkscape. 
 
 ## What benefits do RFs offer?
