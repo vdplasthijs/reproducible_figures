@@ -19,7 +19,7 @@ Sources: [Paper (figure 2)](https://www.biorxiv.org/content/10.1101/2021.12.28.4
 
 <img src="tutorial_content/RowlandVanderPlasLoidolt_2023_bioRxiv_fig3.png" style="width:400px">
 
-Notes: Schematic in a was created using `matplotlib`. 
+Notes: Schematic of panel a) was created using `matplotlib`. 
 
 Sources: [Paper (figure 3)](https://www.biorxiv.org/content/10.1101/2021.12.28.474343v2.full.pdf) and [Code figure](https://github.com/Packer-Lab/popping-off/blob/master/notebooks/Paper%20Figures/Figure3.ipynb)
 
