@@ -4,3 +4,4 @@ scripts/__pycache__/*
 *.code-workspace 
 tutorial/__pycache__/*
 tutorial/generated_figures/__pycache__/*
+*.pyc
