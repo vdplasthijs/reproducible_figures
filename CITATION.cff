@@ -1,0 +1,10 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+- family-names: "Van der Plas"
+   given-names: " Thijs Lambik"
+   orcid: "https://orcid.org/0000-0001-5490-1785"
+title: "Reproducible figures tutorial"
+date-released: 2023-04-28
+url: "https://github.com/vdplasthijs/reproducible_figures"
+repository-code: "https://github.com/vdplasthijs/reproducible_figures"
