@@ -18,19 +18,24 @@ We define __reproducible figures (RFs)__ as _"A (multi-panel) figure that is pro
 
 ### RF principles
 These are the key principles that underlie this tutorial:
-1. **Separate panel _content_ from panel _lay-out_.**
+
+:key: **Separate panel _content_ from panel _lay-out_.**
 This is the key principle for creatings RFs, and will be covered in Steps 1-3. By separating content and lay-out, panels can be flexibly (re-)organised, reused and adjusted/updated. 
 
-2. **Work with Python modules (`.py` files), and use Jupyter workspaces (`.ipynb`) for visualising the end result only.** 
-This will mainly be covered in Steps 1, 4 and 5. Using modules avoids errors due to latent variables still active in the workspace, allows for easy version control (e.g., `git`), and - crucially - facilitates the easy reuse of code.
+:clinking_glasses: **Separate data analysis (functions) from plotting (functions)**
 
-3. **Separate data analysis (functions) from plotting (functions)**
+:bulb: **Take inspiration from other reproducible figures!**
+If (published) figures are reproducible and the code is public, it should be easy to look up the code that generated particular bits that you might want to replicate. For example, the figures of [this paper](https://proceedings.mlr.press/v199/plas22a/plas22a.pdf) (by me) can be found [at its repository](https://github.com/vdplasthijs/eavesdropping/blob/master/Figure%20generation%20notebook.ipynb) (as also linked in the paper). Arguably, data visualisation code is some of the easiest code to share and reuse, as others can directly see the output! Check out our [gallery](https://github.com/vdplasthijs/reproducible_figures/blob/main/tutorial/Tutorial%20appendix%20D%3A%20Gallery.md) of reproducible figures!
 
-4. **Take inspiration from other reproducible figures!**
-If (published) figures are reproducible and the code is public, it should be easy to look up the code that generated particular bits that you might want to replicate. For example, the figures of [this paper](https://proceedings.mlr.press/v199/plas22a/plas22a.pdf) (by me) can be found [at its repository](https://github.com/vdplasthijs/eavesdropping/blob/master/Figure%20generation%20notebook.ipynb) (as also linked in the paper). Arguably, data visualisation code is some of the easiest code to share and reuse, as others can directly see the output!
 
 ### Installation:
-This tutorial was written in Jupyter notebooks, and can therefore either be read in browser, or git-cloned and run locally. If doing so, dependences are minimal, listed in `rf_env.yml`. Note; for appendix A (import svg files) you also need to `pip install svgutils`, as documented in `rf_env_detailed.yml`. 
+This tutorial was written in Jupyter notebooks, and can therefore either be read in browser, or git-cloned and run locally. If doing so, dependences are minimal, listed in `rf_env.yml`. (Install directly with conda by typing in terminal: `conda env create -f rf_env.yml` ). Note; for appendix A (import svg files) you also need to `pip install svgutils`, as documented in `rf_env_detailed.yml`. 
+
+
+### Other resources:
+For tutorial on plotting (in `matplotlib`) in general, see:
+- https://jakevdp.github.io/PythonDataScienceHandbook/04.00-introduction-to-matplotlib.html
+
 
 ### Conclusion:
 Good luck and have fun!
