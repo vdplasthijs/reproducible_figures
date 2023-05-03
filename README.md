@@ -11,7 +11,7 @@ Importantly, this tutorial is by no means an exhaustive resource to all possible
 
 ### What are reproducible figures? 
 
-We define __reproducible figures (RFs)__ as _"A (multi-panel) figure that is produced __completely__ and __finally__ by code, and can therefore be reproduced (by anyone)"_. A common alternative is to use plotting libraries to create individual panels, but afterwards using graphics software such as Illustrator or Inkscape to compile and polish them manually. 
+We define __reproducible figures (RF)__ as _"A (multi-panel) figure that is produced __completely__ and __finally__ by code, and can therefore be reproduced (by anyone)"_. A common alternative is to use plotting libraries to create individual panels, but afterwards using graphics software such as Illustrator or Inkscape to compile and polish them manually. 
 
 ### What benefits do RFs offer?
 - For now, please see my slides in this repository (`reproducible_figures/slides reproducible figs - Thijs van der Plas - 15 June 2022.pdf`) for a conceptual introduction on the benefits of reproducible figures. 

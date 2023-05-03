@@ -47,7 +47,7 @@ def plot_scatter_along_line(ax=None, n=100, slope=1, limit_data=10,
 
     return ax
 
-def plot_sin_one_period(ax=None, n_tp=500, phase=0, alpha=1, colour='k'):
+def plot_sin_one_period(ax=None, n_tp=500, phase=0, alpha=1, colour='k', plot_labels=True):
     '''Create sine over 1 period with offset phase'''
     if ax is None:
         ax = plt.subplot(111)
@@ -56,9 +56,10 @@ def plot_sin_one_period(ax=None, n_tp=500, phase=0, alpha=1, colour='k'):
     sin_array = np.sin(t_array + phase)
 
     ax.plot(t_array, sin_array, linewidth=3, alpha=alpha, c=colour)
-    ax.set_xlabel('Time (s)')
-    ax.set_ylabel('Activation (a.u.)')
-    ax.set_title('Some sine waves', fontdict={'weight': 'bold'})
+    if plot_labels:
+        ax.set_xlabel('Time (s)')
+        ax.set_ylabel('Activation (a.u.)')
+        ax.set_title('Some sine waves', fontdict={'weight': 'bold'})
 
 
 def plot_normal_distr(ax=None, n_tp=500, mean_distr=0, std_distr=1, alpha=1, colour='k'):
@@ -74,7 +75,7 @@ def plot_normal_distr(ax=None, n_tp=500, mean_distr=0, std_distr=1, alpha=1, col
     ax.set_ylabel('PDF')
 
 def plot_brown_proc(ax_trace=None, ax_hist=None, var=1, n_steps=500,
-                    plot_ylabel=True, colour='k'):
+                    plot_ylabel=True, colour='k', plot_labels=True):
     '''Sample brownian motion & plot trace and histogram'''
     gauss_samples = np.random.randn(n_steps) * np.sqrt(var)
     brown_motion = np.cumsum(gauss_samples)
@@ -85,15 +86,15 @@ def plot_brown_proc(ax_trace=None, ax_hist=None, var=1, n_steps=500,
         ax_trace, ax_hist = ax
 
     ax_trace.plot(time_array, brown_motion, linewidth=2, c=colour)
-    ax_trace.set_xlabel('Iteration')
-    if plot_ylabel:
-        ax_trace.set_ylabel('Activity')
-
+    
     ax_hist.hist(brown_motion, bins=np.linspace(-100, 100, 30),
                  facecolor=colour, edgecolor='k', linewidth=1)
-    ax_hist.set_xlabel('Activity')
-    if plot_ylabel:
-        ax_hist.set_ylabel('Frequency')
+    if plot_labels:
+        ax_hist.set_xlabel('Activity')
+        ax_trace.set_xlabel('Iteration')
+        if plot_ylabel:
+            ax_hist.set_ylabel('Frequency')
+            ax_trace.set_ylabel('Activity')
 
 def plot_gaussian_profile(ax=None, cax=None, fig=None, remove_spines=True,
                           title='2D Gaussian profile'):
