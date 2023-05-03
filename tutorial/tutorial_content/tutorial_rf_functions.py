@@ -58,7 +58,7 @@ def plot_sin_one_period(ax=None, n_tp=500, phase=0, alpha=1, colour='k'):
     ax.plot(t_array, sin_array, linewidth=3, alpha=alpha, c=colour)
     ax.set_xlabel('Time (s)')
     ax.set_ylabel('Activation (a.u.)')
-    ax.set_title('Some simple graphs', y=1.05, fontdict={'weight': 'bold'})
+    ax.set_title('Some sine waves', fontdict={'weight': 'bold'})
 
 
 def plot_normal_distr(ax=None, n_tp=500, mean_distr=0, std_distr=1, alpha=1, colour='k'):

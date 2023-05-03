@@ -135,14 +135,21 @@ def remove_both_ticklabels(ax):
     remove_xticklabels(ax)
     remove_yticklabels(ax)
 
-def add_panel_label(ax, fig, label_letter='A', label_ind=None, uppercase=True, use_fig_bbox=False,
+def add_panel_label(ax, fig, label_letter='A', label_ind=None, uppercase=False, 
+                    weight='bold', fontsize=None, verbose=0,
+                    method_placement='labels',
                     x_override=None, y_override=None, x_offset=0, y_offset=0,
-                    weight='bold', fontsize=None, verbose=0):
+                    ):
     '''Add a panel label to ax. 
     Either the str given by label_letter or the i-th letter given by label_ind. 
-    Panel label is automatically placed at top-left corner. But can be overriden by using x_override and y_override. 
+    Panel label is automatically placed at top-left corner. But can be overridden by using x_override and y_override. 
     By default using regular fontsize, but can be overriden by setting fontsize. 
+
+    IMPORTANT: run this function AFTER figure is drawn (plt.draw())
+
+    Coordinates are in axes fraction. 
     '''
+    ## Define label: either label_letter or label_ind
     if label_letter is None:
         assert type(label_ind) == int, f'label_ind should be an int, but is a {type(label_ind)}'
         letters = 'abcdefghijklmnopqrstuvwxyz'
@@ -154,21 +161,45 @@ def add_panel_label(ax, fig, label_letter='A', label_ind=None, uppercase=True, u
         if label_ind is not None:
             print('WARNING: both label_letter and label_ind are not None. Using label_letter.')   
 
-    ## Get left-most x lim of all elements of ax
-    ## Get top-most y lim of all elements of ax
-    if use_fig_bbox:
-        bbox_fig = ax.get_tightbbox(fig.canvas.get_renderer())  # use bounding box of ax object
-        xcoord_left = bbox_fig.xmin
-        ycoord_top = bbox_fig.ymax
-    else:  # use bounding boxes of yaxis and title
-        xcoord_left = ax.yaxis.get_tightbbox(fig.canvas.get_renderer()).xmin  # alternatively, get lims from yaxis & title. 
-        ycoord_top = ax.title.get_tightbbox(fig.canvas.get_renderer()).ymax
+    ## Find coordinates:
+    assert method_placement in ['labels', 'blind', 'override'], f'method_placement={method_placement} not recognized'
 
-    ## Offset if necessary:
-    if x_offset is not None:
-        xcoord_left += x_offset
-    if y_offset is not None:
-        ycoord_top += y_offset
+    if method_placement == 'labels':
+        str_ylabel = ax.get_ylabel()
+        str_xlabel = ax.get_xlabel()
+        str_title = ax.get_title()
+        bool_ylabel = str_ylabel != ''
+        bool_xlabel = str_xlabel != ''
+        bool_title = str_title != ''
+
+        xcoord_ylabel = ax.yaxis.label.get_position()[0]  # get x coord of ylabel IN FIG PIXELS
+        tmp = ax.transAxes.inverted().transform((xcoord_ylabel, 0))  # convert to axes fraction
+        xcoord_ylabel = tmp[0]  # get x coord of ylabel IN AXES fraction
+        if bool_ylabel:  # if there is a ylabel, use that as left-most x coord
+            xcoord_left = xcoord_ylabel
+        else:  # if no ylabel, move panel label inwards
+            xcoord_left = np.minimum(xcoord_ylabel + 0.05, 0)
+        if bool_title:  # if there is a title, use that as top-most y coord
+            ycoord_title = ax.title.get_position()[1]  # get y coord of title IN AX fraction
+            ycoord_top = ycoord_title
+        else:   # if no title, use align with top of fig
+            ycoord_top = 1.0
+
+        ## Offset if necessary:
+        if x_offset is not None:
+            xcoord_left += x_offset
+        if y_offset is not None:
+            ycoord_top += y_offset
+
+    elif method_placement == 'blind':
+        xcoord_left = -0.1
+        ycoord_top = 1.05
+
+    elif method_placement == 'override':
+        assert x_override is not None, 'x_override must be specified'
+        assert y_override is not None, 'y_override must be specified'
+        xcoord_left = x_override
+        ycoord_top = y_override
 
     ## Override if necessary
     if x_override is not None:
@@ -182,15 +213,16 @@ def add_panel_label(ax, fig, label_letter='A', label_ind=None, uppercase=True, u
     if fontsize is None:
         fontsize = plt.rcParams['font.size']
 
-    ax.annotate(label_letter, xy=(xcoord_left, ycoord_top), xycoords='figure pixels', 
-                ha='left', va='top', weight=weight, fontsize=fontsize)
+    ax.annotate(label_letter, xy=(xcoord_left, ycoord_top), 
+                # xycoords='figure pixels', 
+                xycoords='axes fraction',
+                ha='right', va='bottom', weight=weight, fontsize=fontsize)
     
-    ## align ylabels:
-    # ax.text(s=label_letter, x=xcoord_left, y=ycoord_top, ha='left', va='bottom', 
-    #         transform=ax.transAxes, fontweight=weight, fontsize=fontsize, clip_on=False)
+def unpack_2d_list(list2d):
+    '''Unpack a 2d list into a 1d list'''
+    return [item for sublist in list2d for item in sublist]
 
-class TestPlottingFunction(unittest.TestCase):
-    def __init__(self, plotting_function,  methodName: str = "runTest") -> None:
-        super().__init__(methodName)    
-        self.plotting_function = plotting_function
-     
+def concat_all_dict_values_into_list(dict_of_lists):
+    '''Concat all values in dict into a single list'''
+    return [item for sublist in dict_of_lists.values() for item in sublist.values()]
+
