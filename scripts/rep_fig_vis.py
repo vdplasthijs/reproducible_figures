@@ -65,6 +65,13 @@ def get_list_ticklabels(ax, axis='x'):
     elif axis == 'y':
         return [x.get_text() for x in ax.get_yticklabels()]
     
+def set_min_lims_to_0(ax, set_x=True, set_y=True):
+    '''Set minimum limits to 0'''
+    if set_x:
+        ax.set_xlim(left=0)
+    if set_y:
+        ax.set_ylim(bottom=0)
+    
 def equal_xy_lims(ax, start_zero=False):
     '''Set xlim equal to ylim (by their max)'''
     xlims = ax.get_xlim()
